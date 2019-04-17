@@ -1,0 +1,43 @@
+#!/bin/bash
+
+OUT_DIR="/home/local/3SI/andre.foote/Documents/AI\ML/Research/Data/LabeledCarsCSV"
+OUT_FILE="$OUT_DIR/labeledData.txt"
+id=0
+echo "id,filename,width,height,model,xmin,ymin,xmax,ymax" >> $OUT_FILE
+for d in */; do
+	cd $d
+	echo $d
+	make="${PWD##*/}"
+	for d in */; do
+		cd $d
+		echo $d
+		model="${PWD##*/}"
+		((++id))
+		for d in */; do
+			cd $d
+			echo $d
+			year="${PWD##*/}"
+			for f in *;do
+				fullname=$(basename -- "$f")
+				filename="${fullname%.*}"
+
+				xyCordinates="$(cat $f | head -3 | tail -1)"
+				set -- $xyCordinates
+				xmin="$1"
+				ymin="$2"
+				xmax="$3"
+				ymax="$4"
+
+				imageLocation="/home/local/3SI/andre.foote/Documents/AI\ML/Research/Data/CompCars/data/image/$make/$model/$year/$filename.jpg"
+				dimensions="$(file -b $imageLocation | cut -d',' -f8 | xargs)"
+				width="${dimensions%%x*}"
+				height="${dimensions#*x}"
+
+				echo $id,$filename,$width,$height,$model,$xmin,$ymin,$xmax,$ymax >> $OUT_FILE
+			done
+			cd ..
+		done
+		cd ..
+	done
+	cd ..
+done

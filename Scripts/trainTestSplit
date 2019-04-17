@@ -1,0 +1,19 @@
+#!/bin/bash
+
+TRAIN="/home/local/3SI/andre.foote/Documents/AI\ML/Research/Data/Train_Test_Split/train.csv"
+TEST="/home/local/3SI/andre.foote/Documents/AI\ML/Research/Data/Train_Test_Split/test.csv"
+NUMMODELS=1716
+currentLine=1
+
+echo "id,filename,width,height,model,xmin,ymin,xmax,ymax" >> $TRAIN
+echo "id,filename,width,height,model,xmin,ymin,xmax,ymax" >> $TEST
+
+for i in $(seq 1 $NUMMODELS); do
+	count="$(grep -r "^$i," . | wc -l)"
+	trainNum=$(($count*7/10))
+	testNum=$(($count-$trainNum))
+	currentLine=$((currentLine+trainNum))
+	cat "labeledData.csv" | head -$currentLine | tail -$trainNum >> $TRAIN
+	currentLine=$((currentLine+testNum))
+	cat "labeledData.csv" | head -$currentLine | tail -$testNum >> $TEST
+done

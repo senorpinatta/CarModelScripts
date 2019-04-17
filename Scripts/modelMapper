@@ -1,0 +1,14 @@
+#!/bin/bash
+OUT="conditionMap.txt"
+
+FILE="models.txt"
+row=1
+while read line; do
+	model="${line#*= }"
+	echo $'\t'"elif row_label == \"$model\":" >> $OUT
+	echo $'\t\t'"return $row" >> $OUT
+	row=$((row+1))
+done < $FILE
+
+echo $'\t'"else:" >> $OUT
+echo $'\t\t'"0" >> $OUT

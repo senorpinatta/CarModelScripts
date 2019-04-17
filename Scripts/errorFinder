@@ -1,0 +1,11 @@
+#!/bin/bash
+FILE="test.csv"
+COUNT=1
+while read line; do
+	problem="${line%%,*}"
+	nameLength="$(expr length $problem)"
+	if [ $nameLength -ne 14 ]; then
+		echo $COUNT
+	fi
+	COUNT=$((COUNT+1))
+done < $FILE
