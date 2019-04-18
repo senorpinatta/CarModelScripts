@@ -4,9 +4,11 @@ FILE="models.txt"
 row=1
 while read line; do
 	model="${line#*= }"
-	echo "item {" >> "labelMap.pbtxt"
-	echo $'\t'"id: $row" >> "labelMap.pbtxt"
-	echo $'\t'name: \"$model\" >> "labelMap.pbtxt"
-	echo "}"$'\n' >> "labelMap.pbtxt"
-	row=$((row+1))
+	if [ "$model" != "[](0x0)" ]; then
+		echo "item {" >> "labelMap.pbtxt"
+		echo $'\t'"id: $row" >> "labelMap.pbtxt"
+		echo $'\t'name: \"$model\" >> "labelMap.pbtxt"
+		echo "}"$'\n' >> "labelMap.pbtxt"
+		row=$((row+1))
+	fi
 done < $FILE
